@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap");
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root {
+    color-scheme: light dark;
+  }
+
+  body {
+    @apply dark:bg-slate-950 bg-slate-50 dark:text-white text-slate-900;
+    font-family: "DM Sans", "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Slim scrollbar */
+  ::-webkit-scrollbar        { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track  { background: transparent; }
+  ::-webkit-scrollbar-thumb  { @apply dark:bg-white/10 bg-slate-400/50 rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply dark:bg-white/20 bg-slate-500/50; }
+}
+
+@layer utilities {
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0);   }
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.18s ease-out both;
+  }
+}
