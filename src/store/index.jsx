@@ -30,15 +30,30 @@ export const AT = Object.freeze({
   DELETE: "DELETE",
 });
 
+// ── Persistence Helpers ───────────────────────────────────────────────────
+const STORAGE_KEY = "dashboard_data";
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch (err) {
+    console.error("Failed to load state from localStorage", err);
+  }
+  return null;
+}
+
+const persistedData = loadState();
+
 // ── Initial State ──────────────────────────────────────────────────────────
 const initialState = {
   view: "dashboard",
   sidebarOpen: true,
   theme: localStorage.getItem("theme") || "dark",
-  users:     SEED_USERS,
-  employees: SEED_EMPLOYEES,
-  students:  SEED_STUDENTS,
-  schools:   SEED_SCHOOLS,
+  users:     persistedData?.users     || SEED_USERS,
+  employees: persistedData?.employees || SEED_EMPLOYEES,
+  students:  persistedData?.students  || SEED_STUDENTS,
+  schools:   persistedData?.schools   || SEED_SCHOOLS,
 };
 
 // ── Reducer (pure function) ────────────────────────────────────────────────
@@ -85,6 +100,17 @@ const StoreContext = createContext(null);
 // ── Provider ───────────────────────────────────────────────────────────────
 export function StoreProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
+
+  // Persistence: Sync important state to localStorage whenever it changes
+  useEffect(() => {
+    const dataToSave = {
+      users:     state.users,
+      employees: state.employees,
+      students:  state.students,
+      schools:   state.schools,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+  }, [state.users, state.employees, state.students, state.schools]);
 
   // ── Action creators (memoised) ─────────────────────────────────────────
   const setView       = useCallback((v)  => dispatch({ type: AT.SET_VIEW, payload: v }), []);
@@ -149,3 +175,4 @@ export function useStore() {
   if (!ctx) throw new Error("useStore must be used inside <StoreProvider>");
   return ctx;
 }
+

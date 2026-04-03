@@ -13,63 +13,87 @@ import { NAV_ITEMS } from "../../constants";
 // ── Sidebar ────────────────────────────────────────────────────────────────
 function Sidebar({ open, currentView, onNav, onToggle }) {
   return (
-    <aside
-      className={`${open ? "w-60" : "w-16"} transition-all duration-300 flex-shrink-0 flex flex-col border-r dark:border-white/8 border-slate-200 dark:bg-slate-950 bg-slate-50/80 backdrop-blur-xl relative z-10`}
-    >
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-4 py-5 border-b dark:border-white/8 border-slate-200">
-        <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center dark:text-white text-slate-900 font-black text-sm flex-shrink-0 shadow-lg shadow-indigo-900/50">
-          E
+    <>
+      {/* Mobile Backdrop */}
+      <div 
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300 ${open ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        onClick={onToggle}
+      />
+
+      {/* Sidebar Content */}
+      <aside
+        className={`fixed lg:static inset-y-0 left-0 z-50 ${open ? "w-64 translate-x-0" : "w-16 -translate-x-full lg:translate-x-0"} transition-all duration-300 flex-shrink-0 flex flex-col border-r dark:border-white/8 border-slate-200 dark:bg-slate-950 bg-slate-50/80 backdrop-blur-xl`}
+      >
+        {/* Logo */}
+        <div className="flex items-center gap-3 px-4 py-5 border-b dark:border-white/8 border-slate-200">
+          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center dark:text-white text-slate-900 font-black text-sm flex-shrink-0 shadow-lg shadow-indigo-900/50">
+            E
+          </div>
+          {(open || window.innerWidth < 1024) && (
+            <span className="dark:text-white text-slate-900 font-black tracking-tight text-lg overflow-hidden whitespace-nowrap">EduCore</span>
+          )}
         </div>
-        {open && (
-          <span className="dark:text-white text-slate-900 font-black tracking-tight text-lg">EduCore</span>
-        )}
-      </div>
 
-      {/* Nav items */}
-      <nav className="flex-1 px-2 py-4 space-y-1">
-        {NAV_ITEMS.map((item) => (
+        {/* Nav items */}
+        <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
+          {NAV_ITEMS.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => {
+                onNav(item.id);
+                if (window.innerWidth < 1024) onToggle();
+              }}
+              title={!open ? item.label : undefined}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                currentView === item.id
+                  ? "bg-indigo-600 dark:text-white text-slate-900 shadow-lg shadow-indigo-900/50"
+                  : "dark:text-gray-400 text-gray-500 hover:dark:text-white hover:text-slate-900 hover:dark:bg-white/5 hover:bg-slate-100"
+              }`}
+            >
+              <span className="text-base flex-shrink-0">{item.icon}</span>
+              {(open || window.innerWidth < 1024) && <span className="overflow-hidden whitespace-nowrap">{item.label}</span>}
+            </button>
+          ))}
+        </nav>
+
+        {/* Collapse toggle (Desktop only) */}
+        <div className="hidden lg:block px-2 pb-4 border-t dark:border-white/8 border-slate-200 pt-3">
           <button
-            key={item.id}
-            onClick={() => onNav(item.id)}
-            title={!open ? item.label : undefined}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-              currentView === item.id
-                ? "bg-indigo-600 dark:text-white text-slate-900 shadow-lg shadow-indigo-900/50"
-                : "dark:text-gray-400 text-gray-500 hover:dark:text-white hover:text-slate-900 hover:dark:bg-white/5 hover:bg-slate-100"
-            }`}
+            onClick={onToggle}
+            className="w-full flex items-center justify-center gap-2 text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-500 dark:hover:text-white text-xs py-2 rounded-xl transition-all"
           >
-            <span className="text-base flex-shrink-0">{item.icon}</span>
-            {open && <span>{item.label}</span>}
+            {open ? "← Collapse" : "→"}
           </button>
-        ))}
-      </nav>
-
-      {/* Collapse toggle */}
-      <div className="px-2 pb-4 border-t dark:border-white/8 border-slate-200 pt-3">
-        <button
-          onClick={onToggle}
-          className="w-full flex items-center justify-center gap-2 text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-500 dark:hover:text-white text-xs py-2 rounded-xl transition-all"
-        >
-          {open ? "← Collapse" : "→"}
-        </button>
-      </div>
-    </aside>
+        </div>
+      </aside>
+    </>
   );
 }
 
 // ── Header ─────────────────────────────────────────────────────────────────
-function Header({ view, theme, onToggleTheme }) {
+function Header({ view, theme, onToggleTheme, onToggleSidebar }) {
   const label = view === "dashboard" ? "Overview" : view.charAt(0).toUpperCase() + view.slice(1);
   const date  = new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 
   return (
-    <header className="h-14 flex items-center justify-between px-6 border-b dark:border-white/8 border-slate-200 dark:bg-slate-950 bg-slate-50/60 backdrop-blur-xl flex-shrink-0">
-      <h1 className="dark:text-white text-slate-900 font-black text-lg">{label}</h1>
+    <header className="h-16 flex items-center justify-between px-4 lg:px-6 border-b dark:border-white/8 border-slate-200 dark:bg-slate-950 bg-slate-50/60 backdrop-blur-xl flex-shrink-0 sticky top-0 z-30">
       <div className="flex items-center gap-3">
+        <button 
+          onClick={onToggleSidebar}
+          className="lg:hidden p-2 rounded-xl hover:bg-slate-200 dark:hover:bg-white/10 text-slate-500 dark:text-gray-400"
+        >
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <h1 className="dark:text-white text-slate-900 font-black text-lg lg:text-xl">{label}</h1>
+      </div>
+
+      <div className="flex items-center gap-2 lg:gap-3">
+        <span className="text-xs dark:text-gray-500 text-gray-400 hidden md:block">{date}</span>
         <button
           onClick={onToggleTheme}
-          className="p-1.5 rounded-full dark:hover:bg-white/10 hover:bg-slate-200 text-slate-500 dark:text-gray-400 transition-colors"
+          className="p-2 rounded-full dark:hover:bg-white/10 hover:bg-slate-200 text-slate-500 dark:text-gray-400 transition-colors"
           title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
         >
           {theme === 'dark' ? (
@@ -82,8 +106,7 @@ function Header({ view, theme, onToggleTheme }) {
             </svg>
           )}
         </button>
-        <span className="text-xs dark:text-gray-500 text-gray-400 hidden sm:block">{date}</span>
-        <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center dark:text-white text-slate-900 text-xs font-bold shadow-md">
+        <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center dark:text-white text-slate-900 text-xs font-bold shadow-md flex-shrink-0">
           AD
         </div>
       </div>
@@ -111,9 +134,9 @@ export function AppShell({ children }) {
         onToggle={toggleSidebar}
       />
 
-      <div className="flex-1 flex flex-col min-w-0 relative z-10">
-        <Header view={view} theme={theme} onToggleTheme={toggleTheme} />
-        <main className="flex-1 overflow-auto p-6">
+      <div className="flex-1 flex flex-col min-w-0 relative z-10 h-screen">
+        <Header view={view} theme={theme} onToggleTheme={toggleTheme} onToggleSidebar={toggleSidebar} />
+        <main className="flex-1 overflow-auto p-4 lg:p-6">
           {children}
         </main>
       </div>

@@ -22,8 +22,9 @@ const SEARCH_KEYS = ["name", "email", "role"];
 // ── Table ──────────────────────────────────────────────────────────────────
 function UserTable({ users, onEdit, onDelete }) {
   return (
-    <div className="rounded-2xl border border-white/10 overflow-hidden">
-      <table className="w-full text-sm">
+    <div className="rounded-2xl border border-white/10 overflow-hidden dark:bg-white/5 bg-slate-100">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[800px]">
         <thead>
           <tr className="border-b border-white/10 dark:bg-white/5 bg-slate-100">
             {["User", "Email", "Role", "Status", "Joined", "Actions"].map((h) => (
@@ -54,6 +55,7 @@ function UserTable({ users, onEdit, onDelete }) {
           }
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

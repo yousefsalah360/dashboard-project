@@ -108,16 +108,16 @@ export function Field({ label, value, onChange, type = "text", options, placehol
 // ── Modal Action Buttons ───────────────────────────────────────────────────
 export function ModalActions({ onCancel, onSave, saveLabel = "Save" }) {
   return (
-    <div className="flex gap-3 pt-2">
+    <div className="flex flex-col sm:flex-row gap-3 pt-2">
       <button
         onClick={onCancel}
-        className="flex-1 py-2.5 rounded-xl border border-white/10 dark:text-gray-400 text-gray-500 hover:dark:text-white hover:text-slate-900 text-sm transition-colors"
+        className="flex-1 py-2.5 rounded-xl border border-white/10 dark:text-gray-400 text-gray-500 hover:dark:text-white hover:text-slate-900 text-sm transition-colors order-2 sm:order-1"
       >
         Cancel
       </button>
       <button
         onClick={onSave}
-        className="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 dark:text-white text-slate-900 font-semibold text-sm transition-colors"
+        className="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 dark:text-white text-slate-900 font-semibold text-sm transition-colors order-1 sm:order-2"
       >
         {saveLabel}
       </button>
@@ -148,26 +148,26 @@ export function RowActions({ onEdit, onDelete }) {
 // ── Table Toolbar ──────────────────────────────────────────────────────────
 export function TableToolbar({ title, subtitle, onAdd, search, setSearch }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
       <div>
-        <h2 className="dark:text-white text-slate-900 font-black text-xl">{title}</h2>
+        <h2 className="dark:text-white text-slate-900 font-black text-xl lg:text-2xl">{title}</h2>
         {subtitle && <p className="dark:text-gray-500 text-gray-400 text-sm">{subtitle}</p>}
       </div>
-      <div className="flex gap-2">
-        <div className="relative">
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1 sm:flex-none">
           <span className="absolute left-3 top-2.5 dark:text-gray-400 text-gray-500 text-sm select-none">🔍</span>
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search…"
-            className="dark:bg-white/5 bg-slate-100 border border-white/10 rounded-xl pl-8 pr-3 py-2 dark:text-white text-slate-900 text-sm w-48 focus:outline-none focus:border-indigo-500"
+            className="dark:bg-white/5 bg-slate-100 border border-white/10 rounded-xl pl-8 pr-3 py-2 dark:text-white text-slate-900 text-sm w-full sm:w-48 focus:outline-none focus:border-indigo-500"
           />
         </div>
         <button
           onClick={onAdd}
-          className="bg-indigo-600 hover:bg-indigo-500 dark:text-white text-slate-900 px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-1.5"
+          className="bg-indigo-600 hover:bg-indigo-500 dark:text-white text-slate-900 px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-lg shadow-indigo-900/20"
         >
-          <span className="text-base leading-none">+</span> Add
+          <span className="text-base leading-none">+</span> Add New
         </button>
       </div>
     </div>

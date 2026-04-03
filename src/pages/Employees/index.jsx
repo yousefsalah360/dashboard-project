@@ -18,8 +18,9 @@ const SEARCH_KEYS = ["name", "dept", "position"];
 // ── Table ──────────────────────────────────────────────────────────────────
 function EmployeeTable({ employees, onEdit, onDelete }) {
   return (
-    <div className="rounded-2xl border border-white/10 overflow-hidden">
-      <table className="w-full text-sm">
+    <div className="rounded-2xl border border-white/10 overflow-hidden dark:bg-white/5 bg-slate-100">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[800px]">
         <thead>
           <tr className="border-b border-white/10 dark:bg-white/5 bg-slate-100">
             {["Name", "Department", "Position", "Salary", "Joined", "Status", "Actions"].map((h) => (
@@ -51,6 +52,7 @@ function EmployeeTable({ employees, onEdit, onDelete }) {
           }
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
